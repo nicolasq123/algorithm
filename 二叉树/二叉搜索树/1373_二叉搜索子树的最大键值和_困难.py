@@ -37,7 +37,7 @@ class Solution:
             res = res and bT and root.val > maT
             mi = min(mi, miT)
             ma = max(ma, maT)
-            
+
         if root.right:
             r, miT, maT, bT = self.isBST(root.right)
             res = res and bT and root.val < miT
