@@ -13,58 +13,60 @@ class Solution(object):
         :rtype: int
         """
         """
-        方法一,显然，n=len(nums),分割方式有C(n-1,m-1)种, 暴力算法可以把这些都计算出来？
-        方法二,k属于[sum(nums)//m, sum(nums) - m-1个最小的值], 二分
+        方法一,显然，n=len(nums),分割方式有C(n-1,m-1)种, 暴力算法
+        方法二,k属于[sum(nums)//m, sum(nums) - m-1个最小的值], 二分查找.时间复杂度O(n) * O(log(r-l))
         """
         l = sum(nums) // m
+        r = self.getMax(nums, m) # 上界也可以用sum(nums)，慢一点
+
+        while l <= r:
+            mid = l + (r - l) // 2
+            print(l, r, mid)
+            if self.canFinish(nums, m, mid):
+                r = mid-1
+            else:
+                l = mid+1
+        print(l, self.canFinish(nums, m, l))
+        if self.canFinish(nums, m, l):
+            return self.canFinishMaxVal(nums, m, l)
+        return -1
     
+    def canFinishMaxVal(self, nums, m, k):
+        # 获取能够分割的连续子数组max(sum(子数组))
+        res = 0
+        val = 0
+        for i in range(len(nums)):
+            if val + nums[i] <=k:
+                val += nums[i]
+                continue
+            res = max(res, val)
+            val = nums[i]
+        
+        res = max(res, val)
+        return res
+    
+    def canFinish(self, nums, m, k):
+        # 分割的时候，连续子数组和<=k值
+        part = 0
+        val = 0
+        for i in range(len(nums)):
+            if val + nums[i] <=k:
+                val += nums[i]
+                continue
+
+            part += 1
+            if part >m:
+                return False
+            val = nums[i]
+        
+        if val:
+            part += 1
+        return part <=m
+
 
     def getMax(self, nums, m):
-        s = sum(nums)
-        
+        n = len(nums)
+        return max(sum(nums[m:]), sum(nums[:n-m+1]))
 
-
-
-
-
-
-
-class Solution(object):
-    def minEatingSpeed(self, piles, h):
-        """
-        :type piles: List[int]
-        :type h: int
-        :rtype: int
-        """
-        """
-        设每小时吃k个香蕉，显然，k属于[1, max(piles)],k==max(piles)时，len(piles)可以吃完，k==1时，sum(piles)可以吃完。
-        公式 sum(ceil(piles[i] / k)) <= h
-        方法： 在[1, max(piles)]区间，二分查找left bound
-        """
-        if h < len(piles):
-            return -1 # todo
-
-        low = 1
-        hight = max(piles)
-        while low <= hight:
-            m = low + (hight - low) // 2
-            if self.canFinish(piles, m, h):
-                hight = m-1 # 符合条件
-            else:
-                low = m+1 # 不符条件
-
-        return low if self.cal(piles, low, h) else -1
-
-
-    def canFinish(self, piles, k, h):
-        s = 0
-        for p in piles:
-            s += self.ceil(p, k)
-        return s <= h
-
-    def ceil(self, i, j):
-        if j <= 0:
-            return -1 # todo
-        if i // j * j== i:
-            return i // j
-        return (i // j) + 1
+if __name__ == "__main__":
+    print(Solution().splitArray([7,2,5,10,8], 2))
