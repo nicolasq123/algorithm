@@ -44,7 +44,7 @@ class Codec:
         n.left = self.deserialize(self.data)
         n.right = self.deserialize(self.data)
         return n
-    
+
     def getData(self, data):
         c = data.split(',')
         return c[0]

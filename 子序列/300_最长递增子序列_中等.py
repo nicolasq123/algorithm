@@ -12,7 +12,7 @@ class Solution:
         """
         1. base case: dp[i] = 1
         2. 状态: nums
-        3. 选择: 以i为尾，以其他为倒数第二个元素
+        3. 选择: i
         4. 定义dp: dp[i]代表以i为尾的最长递增子序列的长度
         5. 状态转移方程: dp[i] = max(dp[i], dp[j]+1)
         """
