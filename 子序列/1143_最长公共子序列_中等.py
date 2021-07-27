@@ -5,7 +5,7 @@ https://leetcode-cn.com/problems/longest-common-subsequence/
 class Solution:
     def longestCommonSubsequence(self, s1: str, s2: str):
         """
-        1. base case: dp[0] = nums[0]
+        1. base case:
         2. 状态: s1, s2
         3. 选择: i, j
         4. 定义dp: dp[i][j]代表以s1[:i],s2[:j]的最长公共子序列
