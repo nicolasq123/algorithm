@@ -9,14 +9,14 @@ class Solution:
         4. 定义dp: dp[i][j],为from i to j的最小price
         5. 状态转移方程: dp[i][j]= min E (dp[i][m]+dp[m][j])
         """
-        cities_map = {} # key: from, val: tos
+        cities_map = {} # key: to, val: froms
         prices_map = {} # key: from-to val:price
         for f in flights:
-            
-            if f[0] in cities_map:
-                cities_map.get(f[0]).append(f[1])
+
+            if f[1] in cities_map:
+                cities_map.get(f[1]).append(f[0])
             else:
-                cities_map[f[0]] = [f[1]]
+                cities_map[f[1]] = [f[0]]
             key = "{}:{}".format(f[0],f[1])
             prices_map[key] = min(prices_map.get(key, 0x7fffffff), f[2])
         # n cities
@@ -24,29 +24,25 @@ class Solution:
 
         dp = [[[0x7fffffff for _ in range(n)] for _ in range(n)] for _ in range(k+1)] # 顺序 k,i,j
         #xx = [[0 for _ in range(1)] for _ in range(3)] 3行1列
-        
-        # base case
-        for i in range(n):
-            for j in range(n):
-                if i == j:
-                    for x in range(k+1):
-                        dp[x][i][j] = 0
-                else:
-                    key = "{}:{}".format(i, j)
-                    dp[0][i][j] = prices_map.get(key, 0x7fffffff)
-        print("---------", dp)
+        memo = {}
 
+        def dp(k, src, dst):
+            if dst == src:
+                return 0
+            if k == 0:
+                return 0x7fffffff
+            if "{}:{}:{}".format(k, src,dst) in memo:
+                return memo["{}:{}:{}".format(k, src,dst)]
+            res = 0x7fffffff
+            froms = cities_map.get(dst, [])
+            for fr in froms:
+                key = "{}:{}".format(fr, dst)
+                res = min(res, dp(k-1, src, fr)+prices_map.get(key, 0x7fffffff))
+            memo["{}:{}:{}".format(k, src,dst)] = res
+            return res
+        r = dp(k+1, src, dst)
+        return r if r != 0x7fffffff else -1
 
-        for x in range(1, k+1):
-            for i in range(n):
-                for j in range(n):
-                    tos = cities_map.get(i, [])
-                    if not tos:
-                        continue
-                    for t in tos:
-                        dp[x][i][j] = min(dp[x-1][i][t]+dp[0][t][j], dp[x][i][j]) #只依赖dp[x-1]的
-        print("---------", dp)
-        return dp[k][src][dst] if dp[k][src][dst] != 0x7fffffff else -1
 
 
 if __name__ == "__main__":
