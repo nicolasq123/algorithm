@@ -20,11 +20,10 @@ class Solution:
                 r = p -1
         return -1
 
-
     def fastSort(self, nums):
         self.fastSortHelp(nums, 0, len(nums)-1)
         return nums
-    
+
     def fastSortHelp(self, nums, l, r):
         # 双闭
         if l >= r:
@@ -42,16 +41,17 @@ class Solution:
         # 左闭右闭
         while True:
             print("x----", i, j, l, r, pivot, nums, nums[i])
-            while nums[i] < pivot:
-                i += 1
-                print("----", i, j, l, r, pivot, nums)
+            while nums[i] <= pivot:
                 if i == r:
                     break
+                i += 1
+                #print("----", i, j, l, r, pivot, nums)
 
             while nums[j] > pivot:
-                j -= 1
                 if j == l:
                     break
+                j -= 1
+
             if i >= j:
                 break
             self.swap(nums, i, j)
@@ -62,5 +62,5 @@ class Solution:
         nums[l], nums[r] = nums[r], nums[l]
 
 if __name__ == "__main__":
-    print(Solution().fastSort([1,4,2]))
-    #print(Solution().findKthLargest([1,4,2], 2))
+    #print(Solution().fastSort([1,4,2]))
+    print(Solution().findKthLargest([3,3,3,3,3,3,3,3], 1))
