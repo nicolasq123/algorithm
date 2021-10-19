@@ -147,6 +147,12 @@ go func() {
 23. for select时，如果通道已经关闭会怎么样
     - 一直读出零值和false。可代码处理退出当ok==false
 24. 内存逃逸
+    - 发生在编译期
+    - 在方法内把局部变量指针返回
+    - 发送指针或带有指针的值到 channel 中
+    - 在一个切片上存储指针或带指针的值
+    - slice 的背后数组被重新分配了，因为append时可能会超出其容量(cap)
+    - 在 interface 类型上调用方法
 ```
 func foo(s string) *A {
 	tmp := A{}
@@ -155,6 +161,7 @@ func foo(s string) *A {
 	return a //返回局部变量tmp的地址,在C/C++语言中妥妥野指针，但在go则ok，但a会逃逸到堆
 }
 ```
+
 25. resp.Body.Close() 未执行会导致泄露一个read goroutine 和一个写 goroutine
 26. 对已经关闭的的 chan 进行读写，会怎么样
     - 读完管道的数据，然后连续读到"零值,false"
@@ -164,6 +171,7 @@ func foo(s string) *A {
 28. goroutine 泄露
     - 长时间读、写阻塞
     - 死循环
+    - chan有读无写，chan有写无读，select所有case一直都不满足
 29. go垃圾回收
     - 三色标记法配合写屏障和辅助GC
     - 三色标记法（标记清除的增强版）
