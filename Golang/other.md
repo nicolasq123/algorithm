@@ -65,4 +65,9 @@ def logit(func):
         return func(*args, **kwargs)
     return with_logging
 ```
-12. 
+12. 为何redis使用skiplist作为zset的实现而不是红黑树
+    - 按照区间查找数据，效率更高
+    - 代码简单易懂
+    - 灵活，可改变索引构建策略来平衡skiplist
+    - 插入、删除操作更简单、更快（概率均衡技术） （红黑树也都是logn）
+    - 天然有序，flush到磁盘的时候更快
