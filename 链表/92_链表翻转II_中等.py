@@ -64,3 +64,33 @@ class Solution(object):
             if p3:
                 p3 = p3.next
         return p1
+
+# 1<=left<=right<=n
+class Solution2(object):
+    """
+    递归版本
+    """
+    def reverseBetween(self, head, left, right):
+        if left==right:
+            return head
+
+        return self.reverseHelp(head, left, right)
+
+    def reverseN(self, head, n):
+        # 反转前n个, 画个图就清晰了
+        if n == 1:
+            self.successor = head.next
+            return head
+        last = self.reverseN(head.next, n-1)
+        head.next.next = head
+        # 让反转之后的 head 节点和后面的节点连起来
+        head.next = self.successor
+        return last
+
+
+    def reverseHelp(self, head, left, right):
+        if left == 1:
+            return self.reverseN(head, right)
+
+        head.next = self.reverseHelp(head.next, left-1, right-1)
+        return head
